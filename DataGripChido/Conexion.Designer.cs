@@ -40,6 +40,7 @@
             this.lblPuerto = new System.Windows.Forms.Label();
             this.txtPuerto = new System.Windows.Forms.TextBox();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.ckbSSL = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtHost
@@ -63,7 +64,7 @@
             // btnAceptar
             // 
             this.btnAceptar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAceptar.Location = new System.Drawing.Point(195, 275);
+            this.btnAceptar.Location = new System.Drawing.Point(173, 275);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(75, 29);
             this.btnAceptar.TabIndex = 3;
@@ -147,7 +148,7 @@
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(284, 275);
+            this.btnCancelar.Location = new System.Drawing.Point(261, 275);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(75, 29);
             this.btnCancelar.TabIndex = 14;
@@ -155,11 +156,23 @@
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
+            // ckbSSL
+            // 
+            this.ckbSSL.AutoSize = true;
+            this.ckbSSL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckbSSL.Location = new System.Drawing.Point(283, 236);
+            this.ckbSSL.Name = "ckbSSL";
+            this.ckbSSL.Size = new System.Drawing.Size(52, 20);
+            this.ckbSSL.TabIndex = 15;
+            this.ckbSSL.Text = "SSL";
+            this.ckbSSL.UseVisualStyleBackColor = true;
+            // 
             // Conexion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 326);
+            this.Controls.Add(this.ckbSSL);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.lblPuerto);
             this.Controls.Add(this.txtPuerto);
@@ -193,5 +206,6 @@
         private System.Windows.Forms.Label lblPuerto;
         private System.Windows.Forms.TextBox txtPuerto;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.CheckBox ckbSSL;
     }
 }

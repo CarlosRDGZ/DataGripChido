@@ -30,6 +30,15 @@ namespace DataGripChido
         /// </summary>
         public string Puerto { get { return txtPuerto.Text; } }
 
+        /// <summary>
+        /// Algunos servidores ultilizan un capa de seguridad extra para conectarse
+        /// a la base de datos, por lo que activan el protocolo SSL,
+        /// en el caso de PostgreSQL es necesario decirle explicitamente que debe
+        /// utilizar ese protocolo, por lo que abra un valor booleano 
+        /// para determinar si lo usa o no.
+        /// </summary>
+        public bool SSL{ get { return ckbSSL.Checked; } }
+
         public Conexion(string host, string baseDatos, string usuario, string contrasenia, string puerto)
         {
             InitializeComponent();
