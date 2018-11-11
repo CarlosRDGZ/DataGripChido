@@ -35,6 +35,9 @@
             this.btnEjecutar = new System.Windows.Forms.Button();
             this.txtResultado = new System.Windows.Forms.TextBox();
             this.lblResutlado = new System.Windows.Forms.Label();
+            this.cmbSGBDR = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnConectarse
@@ -113,11 +116,46 @@
             this.lblResutlado.TabIndex = 5;
             this.lblResutlado.Text = "Resultado";
             // 
+            // cmbSGBDR
+            // 
+            this.cmbSGBDR.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSGBDR.FormattingEnabled = true;
+            this.cmbSGBDR.Items.AddRange(new object[] {
+            "MySQL",
+            "PostgreSQL"});
+            this.cmbSGBDR.Location = new System.Drawing.Point(322, 17);
+            this.cmbSGBDR.Name = "cmbSGBDR";
+            this.cmbSGBDR.Size = new System.Drawing.Size(121, 24);
+            this.cmbSGBDR.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(256, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 16);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "SGBDR";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 18);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(159, 25);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "DataGrip Chido";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(581, 450);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cmbSGBDR);
             this.Controls.Add(this.lblResutlado);
             this.Controls.Add(this.txtResultado);
             this.Controls.Add(this.btnEjecutar);
@@ -141,6 +179,9 @@
         private System.Windows.Forms.Button btnEjecutar;
         private System.Windows.Forms.TextBox txtResultado;
         private System.Windows.Forms.Label lblResutlado;
+        private System.Windows.Forms.ComboBox cmbSGBDR;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

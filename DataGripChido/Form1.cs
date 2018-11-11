@@ -37,8 +37,6 @@ namespace DataGripChido
         private bool isConectado = false;
 
         private bool onRead = false;
-
-        private string tipoConexion = "PostgreSQL";
         #endregion
 
         public Form1()
@@ -291,9 +289,9 @@ namespace DataGripChido
 
         private void btnConectarse_Click(object sender, EventArgs e)
         {
-            if (tipoConexion == "MySQL")
+            if (cmbSGBDR.Text == "MySQL")
                 ConetarseMySQL();
-            else if (tipoConexion == "PostgreSQL")
+            else if (cmbSGBDR.Text == "PostgreSQL")
                 ConetarsePostgreSQL();
         }
 
@@ -305,9 +303,9 @@ namespace DataGripChido
             // no hace nada.
             if (isConectado && !onRead)
             {
-                if (tipoConexion == "MySQL")
+                if (cmbSGBDR.Text == "MySQL")
                     EjecutarMySQL();
-                else if (tipoConexion == "PostgreSQL")
+                else if (cmbSGBDR.Text == "PostgreSQL")
                     EjecutarPostgreSQL();
             }
             else
