@@ -25,17 +25,31 @@ namespace DataGripChido
         private string puerto = "";
 
         /// <summary>
-        /// Objecto que maneja la conexion a base de datos MySQL
+        /// Determina si es necesario certificado SSL para la conexión
+        /// </summary>
+        private bool ssl = false;
+
+        /// <summary>
+        /// Objecto que maneja la conexión a base de datos MySQL
         /// </summary>
         private MySqlConnection mySQLConexion;
 
         /// <summary>
-        /// Objecto que maneja la conexion a base de datos MySQL
+        /// Objecto que maneja la conexión a base de datos MySQL
         /// </summary>
         private NpgsqlConnection pgConexion;
 
+        /// <summary>
+        /// Esta propiedad booleana se utiliza para saber si exite una conexión activa
+        /// a una base de datos o no.
+        /// </summary>
         private bool isConectado = false;
 
+        /// <summary>
+        /// Esta propiedad solo esta en falso mientras se estan recuperando los datos de la
+        /// base de datos, de manera que si trata de presionar otra vez el boton de 'Ejecutar'
+        /// no haga nada si esta es veradero
+        /// </summary>
         private bool onRead = false;
         #endregion
 
@@ -44,17 +58,21 @@ namespace DataGripChido
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Se engarga de tratar de generar una conexion a bases de datos MySQL
+        /// </summary>
         private void ConetarseMySQL()
         {
-            // Inizializa el formulario de la conexion con los valores actulalez 
+            // Inizializa el formulario de la conexión con los valores actulalez 
             // de las propiedades, para que si quiere editar los valores de la conexion
             // no reedite todo.
             using (Conexion frmConexion = new Conexion(
-                "y06qcehxdtkegbeb.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-                "w93riiyygmp8180s",
-                "tqrtf3w57x49s63n",
-                "q5b6jc0m6hj3zgez",
-                "3306"
+                host,
+                baseDatos,
+                usuario,
+                contrasena,
+                puerto,
+                ssl
             ))
             {
                 // En caso de se precione el boton 'Aceptar', el resultado del dialogo
@@ -67,11 +85,12 @@ namespace DataGripChido
                     baseDatos = frmConexion.BaseDatos;
                     contrasena = frmConexion.Contrasena;
                     puerto = frmConexion.Puerto;
+                    ssl = frmConexion.SSL;
                     try
                     {
-                        // Inizializa un objeto de conexion a una base de datos
+                        // Inizializa un objeto de conexión a una base de datos
                         // MySQL. Su constructor resive una string con los datos
-                        // para iniciar la conexion. (Esto no abre la conexion,
+                        // para iniciar la conexión. (Esto no abre la conexión,
                         // solo prepara el objeto).
                         mySQLConexion = new MySqlConnection(
                             "SERVER=" + host + ";" +
@@ -81,11 +100,11 @@ namespace DataGripChido
                             "PASSWORD=" + contrasena + ";"
                         );
 
-                        // Trata de abrir la conexion a la base de datos, en caso
+                        // Trata de abrir la conexión a la base de datos, en caso
                         // de error lanza una excepcion.
                         mySQLConexion.Open();
 
-                        // Se abrio la conexion y establece isConectado a verdadero
+                        // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
 
                         lblConexion.Text = "Conexión Exitosa";
@@ -94,12 +113,14 @@ namespace DataGripChido
                     }
                     catch (MySqlException ex)
                     {
+                        // Aparece ventana de error
                         MessageBox.Show(ex.Message, "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                         lblConexion.Text = "Conexión Fallida";
                         lblConexion.ForeColor = System.Drawing.Color.Red;
                         lblConexion.Visible = true;
 
-                        // fallo la conexion asi que isConectado es falso
+                        // fallo la conexión asi que isConectado es falso
                         isConectado = false;
                     }
                 }
@@ -110,22 +131,21 @@ namespace DataGripChido
             }
         }
 
+        /// <summary>
+        /// Se engarga de tratar de generar una conexion a bases de datos PostgreSQL
+        /// </summary>
         private void ConetarsePostgreSQL()
         {
-            // Inizializa el formulario de la conexion con los valores actulalez 
-            // de las propiedades, para que si quiere editar los valores de la conexion
+            // Inizializa el formulario de la conexión con los valores actulalez 
+            // de las propiedades, para que si quiere editar los valores de la conexión
             // no reedite todo.
             using (Conexion frmConexion = new Conexion(
-                //"y06qcehxdtkegbeb.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-                //"w93riiyygmp8180s",
-                //"tqrtf3w57x49s63n",
-                //"q5b6jc0m6hj3zgez",
-                //"3306"
-                "ec2-54-83-49-109.compute-1.amazonaws.com",
-                "dam9f2r2oldmnh",
-                "jrusfofxbutkva",
-                "45f27eb3fe4bf151a72a21ee54b00bd4bf9decad34f51928663e9ff14e77a14e",
-                "5432"
+                host,
+                baseDatos,
+                usuario,
+                contrasena,
+                puerto,
+                ssl
             ))
             {
                 // En caso de se precione el boton 'Aceptar', el resultado del dialogo
@@ -138,29 +158,31 @@ namespace DataGripChido
                     baseDatos = frmConexion.BaseDatos;
                     contrasena = frmConexion.Contrasena;
                     puerto = frmConexion.Puerto;
+                    ssl = frmConexion.SSL;
                     try
                     {
-                        // Inizializa un objeto de conexion a una base de datos
-                        // MySQL. Su constructor resive una string con los datos
-                        // para iniciar la conexion. (Esto no abre la conexion,
+                        // Inizializa un objeto de conexión a una base de datos
+                        // PostgreSQL. Su constructor resive una string con los datos
+                        // para iniciar la conexión. (Esto no abre la conexión,
                         // solo prepara el objeto).
+                        // En servidores con segurirdad, la string de conexion
+                        // require de 2 parametros adicionales. Si se agregan o no se
+                        // determina con la propiedad boolena 'ssl'.
                         pgConexion = new NpgsqlConnection(
                             "SERVER=" + host + ";" +
                             "PORT=" + puerto + ";" +
                             "DATABASE=" + baseDatos + ";" +
                             "UID=" + usuario + ";" +
                             "PASSWORD=" + contrasena + ";" + (
-                                frmConexion.SSL ?
-                                    "SSL Mode=Require;Trust Server Certificate=true;" :
-                                    ""
+                                ssl ? "SSL Mode=Require;Trust Server Certificate=true;" : ""
                             )
                         );
 
-                        // Trata de abrir la conexion a la base de datos, en caso
+                        // Trata de abrir la conexión a la base de datos, en caso
                         // de error lanza una excepcion.
                         pgConexion.Open();
 
-                        // Se abrio la conexion y establece isConectado a verdadero
+                        // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
 
                         lblConexion.Text = "Conexión Exitosa";
@@ -174,7 +196,7 @@ namespace DataGripChido
                         lblConexion.ForeColor = System.Drawing.Color.Red;
                         lblConexion.Visible = true;
 
-                        // fallo la conexion asi que isConectado es falso
+                        // fallo la conexión asi que isConectado es falso
                         isConectado = false;
                     }
                 }
@@ -185,6 +207,9 @@ namespace DataGripChido
             }
         }
 
+        /// <summary>
+        /// Ejecuta sentencia de consulta en base de dato MySQL
+        /// </summary>
         private void EjecutarMySQL()
         {
             // Crea una instancia de MySQLCommand, que es el objeto
@@ -192,12 +217,24 @@ namespace DataGripChido
             // y ejecutar comandos (queries).
             try
             {
+                // Objeto utlizado para poder ejecutar un comando de SQL,
+                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
                 MySqlCommand command = new MySqlCommand(txtQuery.Text, mySQLConexion);
 
+                // Objeto para recuperar datos de la consulta.
+                // No es un array, la unica manera de saber si hay o no
+                // datos es llamar a Read. Estructura tipo lista.
                 MySqlDataReader reader = command.ExecuteReader();
                 onRead = true;
-
+                                
+                // Variable para el control de cuantos registros se recuperaron
                 int registrosRecuperados = 0;
+
+                // En un ciclo, mientras existan registros, se podran recuperar
+                // los registros (si es que la consulta devolvio registros).
+                // Mientras lea un registro se cilcla el numero de columnas
+                // del registro y por cada iteracion se agrega a la string de
+                // resultado el registro.
                 while (reader.Read())
                 {
                     for (int i = 0; i < reader.FieldCount; i++)
@@ -215,6 +252,7 @@ namespace DataGripChido
 
                 onRead = false;
 
+                // Mensaje de ejecucion terminada
                 MessageBox.Show(
                     "Sentecia ejectuda correctamente." + Environment.NewLine
                     + "Rigistros afectados: " +
@@ -243,12 +281,24 @@ namespace DataGripChido
             // y ejecutar comandos (queries).
             try
             {
+                // Objeto utlizado para poder ejecutar un comando de SQL,
+                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
                 NpgsqlCommand command = new NpgsqlCommand(txtQuery.Text, pgConexion);
 
+                // Objeto para recuperar datos de la consulta.
+                // No es un array, la unica manera de saber si hay o no
+                // datos es llamar a Read. Estructura tipo lista.
                 NpgsqlDataReader reader = command.ExecuteReader();
                 onRead = true;
 
+                // Variable para el control de cuantos registros se recuperaron
                 int registrosRecuperados = 0;
+
+                // En un ciclo, mientras existan registros, se podran recuperar
+                // los registros (si es que la consulta devolvio registros).
+                // Mientras lea un registro se cilcla el numero de columnas
+                // del registro y por cada iteracion se agrega a la string de
+                // resultado el registro.
                 while (reader.Read())
                 {
                     for (int i = 0; i < reader.FieldCount; i++)
@@ -289,17 +339,39 @@ namespace DataGripChido
 
         private void btnConectarse_Click(object sender, EventArgs e)
         {
+            // Limpiar los objetos de conexion, por si existia una conexión previa
+            if (mySQLConexion != null)
+            {
+                // cierra conexión
+                mySQLConexion.Close();
+                // detruye objeto
+                mySQLConexion = null;
+            }
+
+            if (pgConexion != null)
+            {
+                // cierra conexión
+                pgConexion.Close();
+                // detruye objeto
+                pgConexion = null;
+            }
+
+            // limpia resultados y query
+            txtQuery.Text = txtResultado.Text = "";
+
             if (cmbSGBDR.Text == "MySQL")
                 ConetarseMySQL();
             else if (cmbSGBDR.Text == "PostgreSQL")
                 ConetarsePostgreSQL();
+            else
+                MessageBox.Show("Gestor de base de datos no soportado", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void btnEjecutar_Click(object sender, EventArgs e)
         {
             txtResultado.Text = "";
 
-            // Verifica que este la conexion abierta, de lo contrario
+            // Verifica que este la conexión abierta, de lo contrario
             // no hace nada.
             if (isConectado && !onRead)
             {
@@ -309,7 +381,7 @@ namespace DataGripChido
                     EjecutarPostgreSQL();
             }
             else
-                MessageBox.Show("No hay conexion a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No hay conexión a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
