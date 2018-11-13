@@ -38,12 +38,13 @@
             this.cmbSGBDR = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.tvDb = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // btnConectarse
             // 
             this.btnConectarse.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConectarse.Location = new System.Drawing.Point(472, 12);
+            this.btnConectarse.Location = new System.Drawing.Point(805, 12);
             this.btnConectarse.Name = "btnConectarse";
             this.btnConectarse.Size = new System.Drawing.Size(97, 29);
             this.btnConectarse.TabIndex = 0;
@@ -55,7 +56,7 @@
             // 
             this.lblConexion.AutoSize = true;
             this.lblConexion.ForeColor = System.Drawing.Color.Green;
-            this.lblConexion.Location = new System.Drawing.Point(478, 48);
+            this.lblConexion.Location = new System.Drawing.Point(811, 48);
             this.lblConexion.Name = "lblConexion";
             this.lblConexion.Size = new System.Drawing.Size(88, 13);
             this.lblConexion.TabIndex = 1;
@@ -65,7 +66,7 @@
             // txtQuery
             // 
             this.txtQuery.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtQuery.Location = new System.Drawing.Point(16, 82);
+            this.txtQuery.Location = new System.Drawing.Point(349, 82);
             this.txtQuery.Multiline = true;
             this.txtQuery.Name = "txtQuery";
             this.txtQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -77,7 +78,7 @@
             // 
             this.lblQuery.AutoSize = true;
             this.lblQuery.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblQuery.Location = new System.Drawing.Point(18, 63);
+            this.lblQuery.Location = new System.Drawing.Point(351, 63);
             this.lblQuery.Name = "lblQuery";
             this.lblQuery.Size = new System.Drawing.Size(73, 16);
             this.lblQuery.TabIndex = 3;
@@ -86,7 +87,7 @@
             // btnEjecutar
             // 
             this.btnEjecutar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEjecutar.Location = new System.Drawing.Point(481, 183);
+            this.btnEjecutar.Location = new System.Drawing.Point(814, 183);
             this.btnEjecutar.Name = "btnEjecutar";
             this.btnEjecutar.Size = new System.Drawing.Size(85, 27);
             this.btnEjecutar.TabIndex = 0;
@@ -97,7 +98,7 @@
             // txtResultado
             // 
             this.txtResultado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtResultado.Location = new System.Drawing.Point(16, 235);
+            this.txtResultado.Location = new System.Drawing.Point(349, 235);
             this.txtResultado.Multiline = true;
             this.txtResultado.Name = "txtResultado";
             this.txtResultado.ReadOnly = true;
@@ -110,7 +111,7 @@
             // 
             this.lblResutlado.AutoSize = true;
             this.lblResutlado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResutlado.Location = new System.Drawing.Point(18, 216);
+            this.lblResutlado.Location = new System.Drawing.Point(351, 216);
             this.lblResutlado.Name = "lblResutlado";
             this.lblResutlado.Size = new System.Drawing.Size(70, 16);
             this.lblResutlado.TabIndex = 5;
@@ -123,7 +124,7 @@
             this.cmbSGBDR.Items.AddRange(new object[] {
             "MySQL",
             "PostgreSQL"});
-            this.cmbSGBDR.Location = new System.Drawing.Point(322, 17);
+            this.cmbSGBDR.Location = new System.Drawing.Point(655, 17);
             this.cmbSGBDR.Name = "cmbSGBDR";
             this.cmbSGBDR.Size = new System.Drawing.Size(121, 24);
             this.cmbSGBDR.TabIndex = 6;
@@ -132,7 +133,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(256, 21);
+            this.label1.Location = new System.Drawing.Point(589, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 16);
             this.label1.TabIndex = 7;
@@ -142,17 +143,25 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(13, 18);
+            this.label2.Location = new System.Drawing.Point(346, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(159, 25);
             this.label2.TabIndex = 8;
             this.label2.Text = "DataGrip Chido";
             // 
+            // tvDb
+            // 
+            this.tvDb.Location = new System.Drawing.Point(30, 21);
+            this.tvDb.Name = "tvDb";
+            this.tvDb.Size = new System.Drawing.Size(268, 391);
+            this.tvDb.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 450);
+            this.ClientSize = new System.Drawing.Size(927, 450);
+            this.Controls.Add(this.tvDb);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbSGBDR);
@@ -182,6 +191,7 @@
         private System.Windows.Forms.ComboBox cmbSGBDR;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TreeView tvDb;
     }
 }
 

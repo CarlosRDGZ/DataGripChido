@@ -52,7 +52,7 @@ namespace DataGripChido
         /// </summary>
         private bool onRead = false;
         #endregion
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -130,7 +130,7 @@ namespace DataGripChido
                 }
             }
         }
-
+        
         /// <summary>
         /// Se engarga de tratar de generar una conexion a bases de datos PostgreSQL
         /// </summary>
@@ -274,6 +274,73 @@ namespace DataGripChido
             }
         }
 
+
+
+        public void SqlMenu(string sql)
+        {
+            
+            // Crea una instancia de MySQLCommand, que es el objeto
+            // que utiliza C# para poder interactuar con la base de datos
+            // y ejecutar comandos (queries).
+            try
+            {
+                // Objeto utlizado para poder ejecutar un comando de SQL,
+                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
+                MySqlCommand command = new MySqlCommand(sql, mySQLConexion);
+
+                // Objeto para recuperar datos de la consulta.
+                // No es un array, la unica manera de saber si hay o no
+                // datos es llamar a Read. Estructura tipo lista.
+                MySqlDataReader reader = command.ExecuteReader();
+                onRead = true;
+
+                // Variable para el control de cuantos registros se recuperaron
+                int registrosRecuperados = 0;
+
+                // En un ciclo, mientras existan registros, se podran recuperar
+                // los registros (si es que la consulta devolvio registros).
+                // Mientras lea un registro se cicla el numero de columnas
+                // del registro y por cada iteracion se agrega a la string de
+                // resultado el registro.
+                while (reader.Read())
+                {
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string column = reader.GetName(i);
+                        txtResultado.Text += column + ": " + reader[column] + Environment.NewLine;
+                    }
+
+                    tvDb.Nodes.Add(txtResultado.Text); //+= Environment.NewLine;
+
+                    registrosRecuperados++;
+                }
+
+                reader.Close();
+
+                onRead = false;
+
+                // Mensaje de ejecucion terminada
+                MessageBox.Show(
+                    "Sentecia ejectuda correctamente." + Environment.NewLine
+                    + "Rigistros afectados: " +
+                        (reader.RecordsAffected > 0 ? reader.RecordsAffected : 0)
+                        + Environment.NewLine
+                    + "Registros Recuperados: " + registrosRecuperados,
+                    "Consulta exitosa",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
+            catch (Exception ex)
+            {
+                onRead = false;
+
+                MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                txtResultado.Text = ex.Message;
+            }
+        }
+
         private void EjecutarPostgreSQL()
         {
             // Crea una instancia de MySQLCommand, que es el objeto
@@ -360,7 +427,12 @@ namespace DataGripChido
             txtQuery.Text = txtResultado.Text = "";
 
             if (cmbSGBDR.Text == "MySQL")
+            {
                 ConetarseMySQL();
+                SqlMenu("SELECT table_schema " +
+                    "FROM INFORMATION_SCHEMA.tables " +
+                    "GROUP BY table_schema");
+            }
             else if (cmbSGBDR.Text == "PostgreSQL")
                 ConetarsePostgreSQL();
             else
@@ -382,6 +454,11 @@ namespace DataGripChido
             }
             else
                 MessageBox.Show("No hay conexión a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
