@@ -11,18 +11,18 @@ namespace DataGripChido
         /// <summary>
         /// Representa el host (computadora) a la que se conecta para usar la base de datos ej: localhost, 148.213.20.112
         /// </summary>
-        private string host = "";
+        private string host = "localhost";
 
-        private string baseDatos = "";
+        private string baseDatos = "information_schema";
 
-        private string usuario = "";
+        private string usuario = "root";
 
-        private string contrasena = "";
+        private string contrasena = "root";
 
         /// <summary>
         /// Puerto en el que esta escuchando el servicio de la base de datos
         /// </summary>
-        private string puerto = "";
+        private string puerto = "3306";
 
         /// <summary>
         /// Determina si es necesario certificado SSL para la conexión
@@ -304,13 +304,12 @@ namespace DataGripChido
                 // resultado el registro.
                 while (reader.Read())
                 {
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        string column = reader.GetName(i);
-                        txtResultado.Text += column + ": " + reader[column] + Environment.NewLine;
-                    }
+                    string bd = "";
 
-                    tvDb.Nodes.Add(txtResultado.Text); //+= Environment.NewLine;
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        bd = (string)reader[i];
+
+                    tvDb.Nodes.Add(bd); //+= Environment.NewLine;
 
                     registrosRecuperados++;
                 }
@@ -393,7 +392,7 @@ namespace DataGripChido
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 );
-            }//hola
+            }
             catch (Exception ex)
             {
                 onRead = false;
