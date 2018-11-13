@@ -393,7 +393,7 @@ namespace DataGripChido
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 );
-            }
+            }//hola
             catch (Exception ex)
             {
                 onRead = false;
