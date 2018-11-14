@@ -11,13 +11,13 @@ namespace DataGripChido
         /// <summary>
         /// Representa el host (computadora) a la que se conecta para usar la base de datos ej: localhost, 148.213.20.112
         /// </summary>
-        private string host = "localhost";
+        private string host = "y06qcehxdtkegbeb.cbetxkdyhwsb.us-east-1.rds.amazonaws.com";
 
-        private string baseDatos = "information_schema";
+        private string baseDatos = "w93riiyygmp8180s";
 
-        private string usuario = "root";
+        private string usuario = "tqrtf3w57x49s63n";
 
-        private string contrasena = "root";
+        private string contrasena = "q5b6jc0m6hj3zgez";
 
         /// <summary>
         /// Puerto en el que esta escuchando el servicio de la base de datos
@@ -237,13 +237,23 @@ namespace DataGripChido
                 // resultado el registro.
                 while (reader.Read())
                 {
+                    DataGridViewRow row = new DataGridViewRow();
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        string column = reader.GetName(i);
-                        txtResultado.Text += column + ": " + reader[column] + Environment.NewLine;
+                        if (dataGrid.ColumnCount < reader.FieldCount)
+                        {
+                            DataGridViewColumn col = new DataGridViewColumn();
+                            col.CellTemplate = new DataGridViewTextBoxCell();
+                            string column = reader.GetName(i);
+                            col.HeaderText = column;
+                            dataGrid.Columns.Add(col);
+                        }
+                        var cell = new DataGridViewTextBoxCell();
+                        cell.Value = reader[i];
+                        row.Cells.Add(cell);
+                        cell.ReadOnly = true;
                     }
-
-                    txtResultado.Text += Environment.NewLine;
+                    dataGrid.Rows.Add(row);
 
                     registrosRecuperados++;
                 }
@@ -269,8 +279,6 @@ namespace DataGripChido
                 onRead = false;
 
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
@@ -299,15 +307,28 @@ namespace DataGripChido
                 // Mientras lea un registro se cilcla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
+
                 while (reader.Read())
                 {
+                    DataGridViewRow row = new DataGridViewRow();
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        string column = reader.GetName(i);
-                        txtResultado.Text += column + ": " + reader[column] + Environment.NewLine;
+                        if (dataGrid.ColumnCount < reader.FieldCount)
+                        {
+                            DataGridViewColumn col = new DataGridViewColumn();
+                            col.CellTemplate = new DataGridViewTextBoxCell();
+                            string column = reader.GetName(i);
+                            col.HeaderText = column;
+                            dataGrid.Columns.Add(col);
+                        }
+
+                        var cell = new DataGridViewTextBoxCell();
+                        cell.Value = reader[i];
+                        row.Cells.Add(cell);
+                        cell.ReadOnly = true;
                     }
 
-                    txtResultado.Text += Environment.NewLine;
+                    dataGrid.Rows.Add(row);
 
                     registrosRecuperados++;
                 }
@@ -332,8 +353,6 @@ namespace DataGripChido
                 onRead = false;
 
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
@@ -357,7 +376,8 @@ namespace DataGripChido
             }
 
             // limpia resultados y query
-            txtQuery.Text = txtResultado.Text = "";
+            dataGrid.Rows.Clear();
+            dataGrid.Columns.Clear();
 
 
 
@@ -376,7 +396,8 @@ namespace DataGripChido
 
         private void btnEjecutar_Click(object sender, EventArgs e)
         {
-            txtResultado.Text = "";
+            dataGrid.Rows.Clear();
+            dataGrid.Columns.Clear();
 
             // Verifica que este la conexión abierta, de lo contrario
             // no hace nada.
@@ -389,11 +410,6 @@ namespace DataGripChido
             }
             else
                 MessageBox.Show("No hay conexión a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

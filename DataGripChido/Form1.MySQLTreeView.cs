@@ -59,8 +59,6 @@ namespace DataGripChido
                 onRead = false;
 
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
@@ -114,8 +112,6 @@ namespace DataGripChido
                 onRead = false;
 
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
@@ -168,8 +164,6 @@ namespace DataGripChido
                 onRead = false;
 
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
     }

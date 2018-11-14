@@ -33,12 +33,13 @@
             this.txtQuery = new System.Windows.Forms.TextBox();
             this.lblQuery = new System.Windows.Forms.Label();
             this.btnEjecutar = new System.Windows.Forms.Button();
-            this.txtResultado = new System.Windows.Forms.TextBox();
             this.lblResutlado = new System.Windows.Forms.Label();
             this.cmbSGBDR = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tvDb = new System.Windows.Forms.TreeView();
+            this.dataGrid = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // btnConectarse
@@ -95,18 +96,6 @@
             this.btnEjecutar.UseVisualStyleBackColor = true;
             this.btnEjecutar.Click += new System.EventHandler(this.btnEjecutar_Click);
             // 
-            // txtResultado
-            // 
-            this.txtResultado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtResultado.Location = new System.Drawing.Point(349, 235);
-            this.txtResultado.Multiline = true;
-            this.txtResultado.Name = "txtResultado";
-            this.txtResultado.ReadOnly = true;
-            this.txtResultado.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResultado.Size = new System.Drawing.Size(550, 194);
-            this.txtResultado.TabIndex = 4;
-            this.txtResultado.WordWrap = false;
-            // 
             // lblResutlado
             // 
             this.lblResutlado.AutoSize = true;
@@ -156,17 +145,25 @@
             this.tvDb.Size = new System.Drawing.Size(268, 391);
             this.tvDb.TabIndex = 9;
             // 
+            // dataGrid
+            // 
+            this.dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid.Location = new System.Drawing.Point(349, 235);
+            this.dataGrid.Name = "dataGrid";
+            this.dataGrid.Size = new System.Drawing.Size(548, 177);
+            this.dataGrid.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(927, 450);
+            this.ClientSize = new System.Drawing.Size(927, 436);
+            this.Controls.Add(this.dataGrid);
             this.Controls.Add(this.tvDb);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbSGBDR);
             this.Controls.Add(this.lblResutlado);
-            this.Controls.Add(this.txtResultado);
             this.Controls.Add(this.btnEjecutar);
             this.Controls.Add(this.lblQuery);
             this.Controls.Add(this.txtQuery);
@@ -174,6 +171,7 @@
             this.Controls.Add(this.btnConectarse);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,12 +184,12 @@
         private System.Windows.Forms.TextBox txtQuery;
         private System.Windows.Forms.Label lblQuery;
         private System.Windows.Forms.Button btnEjecutar;
-        private System.Windows.Forms.TextBox txtResultado;
         private System.Windows.Forms.Label lblResutlado;
         private System.Windows.Forms.ComboBox cmbSGBDR;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TreeView tvDb;
+        private System.Windows.Forms.DataGridView dataGrid;
     }
 }
 
