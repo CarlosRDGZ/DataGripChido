@@ -11,13 +11,21 @@ namespace DataGripChido
         /// <summary>
         /// Representa el host (computadora) a la que se conecta para usar la base de datos ej: localhost, 148.213.20.112
         /// </summary>
-        private string host = "y06qcehxdtkegbeb.cbetxkdyhwsb.us-east-1.rds.amazonaws.com";
+        //private string host = "y06qcehxdtkegbeb.cbetxkdyhwsb.us-east-1.rds.amazonaws.com";
 
-        private string baseDatos = "w93riiyygmp8180s";
+        //private string baseDatos = "w93riiyygmp8180s";
 
-        private string usuario = "tqrtf3w57x49s63n";
+        //private string usuario = "tqrtf3w57x49s63n";
 
-        private string contrasena = "q5b6jc0m6hj3zgez";
+        //private string contrasena = "q5b6jc0m6hj3zgez";
+
+        private string host = "ec2-54-221-234-62.compute-1.amazonaws.com";
+
+        private string baseDatos = "d7mdj4u8hovsc2";
+
+        private string usuario = "jesnsvrksrsqdo";
+
+        private string contrasena = "55ebaa3ba100c294330de045be60aa1646b5cfeb3d9d7b056108b2f56f96d6d1";
 
         /// <summary>
         /// Puerto en el que esta escuchando el servicio de la base de datos
@@ -106,10 +114,6 @@ namespace DataGripChido
 
                         // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
-
-                        lblConexion.Text = "Conexión Exitosa";
-                        lblConexion.ForeColor = System.Drawing.Color.Green;
-                        lblConexion.Visible = true;
                     }
                     catch (MySqlException ex)
                     {
@@ -184,10 +188,6 @@ namespace DataGripChido
 
                         // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
-
-                        lblConexion.Text = "Conexión Exitosa";
-                        lblConexion.ForeColor = System.Drawing.Color.Green;
-                        lblConexion.Visible = true;
                     }
                     catch (Exception ex)
                     {
@@ -210,7 +210,7 @@ namespace DataGripChido
         /// <summary>
         /// Ejecuta sentencia de consulta en base de dato MySQL
         /// </summary>
-        private void EjecutarMySQL()
+        private async System.Threading.Tasks.Task EjecutarMySQLAsync()
         {
             // Crea una instancia de MySQLCommand, que es el objeto
             // que utiliza C# para poder interactuar con la base de datos
@@ -224,7 +224,7 @@ namespace DataGripChido
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
                 // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
+                MySqlDataReader reader = (MySqlDataReader) await command.ExecuteReaderAsync();
                 onRead = true;
                                 
                 // Variable para el control de cuantos registros se recuperaron
@@ -235,7 +235,7 @@ namespace DataGripChido
                 // Mientras lea un registro se cilcla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     DataGridViewRow row = new DataGridViewRow();
                     for (int i = 0; i < reader.FieldCount; i++)
@@ -282,7 +282,7 @@ namespace DataGripChido
             }
         }
 
-        private void EjecutarPostgreSQL()
+        private async System.Threading.Tasks.Task EjecutarPostgreSQLAsync()
         {
             // Crea una instancia de MySQLCommand, que es el objeto
             // que utiliza C# para poder interactuar con la base de datos
@@ -296,7 +296,7 @@ namespace DataGripChido
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
                 // datos es llamar a Read. Estructura tipo lista.
-                NpgsqlDataReader reader = command.ExecuteReader();
+                NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
                 onRead = true;
 
                 // Variable para el control de cuantos registros se recuperaron
@@ -308,7 +308,7 @@ namespace DataGripChido
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
 
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     DataGridViewRow row = new DataGridViewRow();
                     for (int i = 0; i < reader.FieldCount; i++)
@@ -384,12 +384,13 @@ namespace DataGripChido
             if (cmbSGBDR.Text == "MySQL")
             {
                 ConetarseMySQL();
-                SqlMenu("SELECT table_schema " +
-                    "FROM INFORMATION_SCHEMA.tables " +
-                    "GROUP BY table_schema");
+                SqlMenuAsync("SELECT table_schema FROM INFORMATION_SCHEMA.tables GROUP BY table_schema");
             }
             else if (cmbSGBDR.Text == "PostgreSQL")
+            {
                 ConetarsePostgreSQL();
+                PostSqlMenuAsync("select table_schema from information_schema.tables group by table_schema");
+            }   
             else
                 MessageBox.Show("Gestor de base de datos no soportado", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
@@ -404,9 +405,9 @@ namespace DataGripChido
             if (isConectado && !onRead)
             {
                 if (cmbSGBDR.Text == "MySQL")
-                    EjecutarMySQL();
+                    EjecutarMySQLAsync();
                 else if (cmbSGBDR.Text == "PostgreSQL")
-                    EjecutarPostgreSQL();
+                    EjecutarPostgreSQLAsync();
             }
             else
                 MessageBox.Show("No hay conexión a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);

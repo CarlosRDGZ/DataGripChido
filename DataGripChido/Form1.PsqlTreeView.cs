@@ -1,159 +1,126 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
+using Npgsql;
 
-namespace DataGripChido {
-    public partial class Form1 {
-        public void PostSqlMenu(string sql) {
+namespace DataGripChido
+{
+    public partial class Form1
+    {
+        public async System.Threading.Tasks.Task PostSqlMenuAsync(string sql)
+        {
             //string sql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA = " + hola;
-            // Crea una instancia de MySQLCommand, que es el objeto
+            // Crea una instancia de NpgsqlCommand, que es el objeto
             // que utiliza C# para poder interactuar con la base de datos
             // y ejecutar comandos (queries).
-            try {
-                // Objeto utlizado para poder ejecutar un comando de SQL,
-                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
-                MySqlCommand command = new MySqlCommand(sql, mySQLConexion);
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand(sql, pgConexion);
+                NpgsqlDataReader reader = (NpgsqlDataReader) await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync()) {
+                    string bd = "";
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        bd = (string)reader[i];
+                    tvDb.Nodes.Add(bd);
+                }
 
-                // Objeto para recuperar datos de la consulta.
-                // No es un array, la unica manera de saber si hay o no
-                // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
+                reader.Close();
+                foreach (TreeNode node in tvDb.Nodes)
+                    await CrearBDPostgresAsync(node);
 
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
+                lblConexion.Text = "Conexión Exitosa";
+                lblConexion.ForeColor = System.Drawing.Color.Green;
+                lblConexion.Visible = true;
 
-                // En un ciclo, mientras existan registros, se podran recuperar
-                // los registros (si es que la consulta devolvio registros).
-                // Mientras lea un registro se cicla el numero de columnas
-                // del registro y por cada iteracion se agrega a la string de
-                // resultado el registro.
-                while (reader.Read()) {
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public async System.Threading.Tasks.Task CrearBDPostgresAsync (TreeNode schema)
+        {
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand("select table_catalog " +
+                            "from information_schema.tables " +
+                            "where table_schema = '" + schema.Text + "' group by table_catalog", pgConexion);
+                NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
                     string bd = "";
 
                     for (int i = 0; i < reader.FieldCount; i++)
                         bd = (string)reader[i];
 
-                    tvDb.Nodes.Add(bd); //+= Environment.NewLine;
-
-
-                    registrosRecuperados++;
+                    schema.Nodes.Add(bd);
                 }
 
                 reader.Close();
 
-                foreach (TreeNode node in tvDb.Nodes) {
-                    PostCrearHijosMySQL(node);
-                    Console.WriteLine(node.Text);
-                }
-                onRead = false;
-            } catch (Exception ex) {
-                onRead = false;
-
+                foreach (TreeNode node in schema.Nodes)
+                    await PostCrearHijosMySQLAsync(schema, node);
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
-        public void PostCrearHijosMySQL(TreeNode node) {
-            try {
-                // Objeto utlizado para poder ejecutar un comando de SQL,
-                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
-                MySqlCommand command = new MySqlCommand("select table_name " +
-                                "from information_schema.tables" +
-                            "where table_schema = 'public' and table_catalog = '" + node.Text + "'", mySQLConexion);
+        public async System.Threading.Tasks.Task PostCrearHijosMySQLAsync(TreeNode schema, TreeNode bd) {
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand("select table_name " +
+                                "from information_schema.tables " +
+                            "where table_schema = '"+ schema.Text + "' and table_catalog = '" + bd.Text + "'", pgConexion);
 
+                NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
 
-                // Objeto para recuperar datos de la consulta.
-                // No es un array, la unica manera de saber si hay o no
-                // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
-
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
-
-                // En un ciclo, mientras existan registros, se podran recuperar
-                // los registros (si es que la consulta devolvio registros).
-                // Mientras lea un registro se cicla el numero de columnas
-                // del registro y por cada iteracion se agrega a la string de
-                // resultado el registro.
-                while (reader.Read()) {
-                    string bd = "";
+                while (await reader.ReadAsync())
+                {
+                    string table = "";
 
                     for (int i = 0; i < reader.FieldCount; i++)
-                        bd = (string)reader[i];
+                        table = (string)reader[i];
 
-                    node.Nodes.Add(bd);
-                    //tvDb.Nodes[NodoPocision].Nodes.Add(bd); //+= Environment.NewLine;
-
-                    registrosRecuperados++;
+                    bd.Nodes.Add(table);
                 }
 
                 reader.Close();
 
-                foreach (TreeNode padre in node.Nodes) {
-                    PostCrearNietosMySQL(node, padre);
-                }
-                onRead = false;
+                foreach (TreeNode padre in bd.Nodes)
+                    await PostCrearNietosMySQLAsync(schema, bd, padre);
             } catch (Exception ex) {
-                onRead = false;
-
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
 
-        public void PostCrearNietosMySQL(TreeNode abuelo, TreeNode padre) {
-            //string sql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA = " + hola;
-            // Crea una instancia de MySQLCommand, que es el objeto
-            // que utiliza C# para poder interactuar con la base de datos
-            // y ejecutar comandos (queries).
-            try {
-                // Objeto utlizado para poder ejecutar un comando de SQL,
-                // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
-                MySqlCommand command = new MySqlCommand("select column_name " +
+        public async System.Threading.Tasks.Task PostCrearNietosMySQLAsync(TreeNode schema, TreeNode abuelo, TreeNode padre)
+        {
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand("select column_name " +
                 "from information_schema.columns " +
-                "where table_schema =  'public'" +
+                "where table_schema = '" + schema.Text + "' " +
                 "and table_catalog = '" + abuelo.Text + "' " +
-                "and table_name = '" + padre.Text + "' ", mySQLConexion);
+                "and table_name = '" + padre.Text + "' ", pgConexion);
 
+                NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
 
-                // Objeto para recuperar datos de la consulta.
-                // No es un array, la unica manera de saber si hay o no
-                // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
-
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
-
-                // En un ciclo, mientras existan registros, se podran recuperar
-                // los registros (si es que la consulta devolvio registros).
-                // Mientras lea un registro se cicla el numero de columnas
-                // del registro y por cada iteracion se agrega a la string de
-                // resultado el registro.
-                while (reader.Read()) {
-                    string bd = "";
+                while (await reader.ReadAsync())
+                {
+                    string column = "";
 
                     for (int i = 0; i < reader.FieldCount; i++)
-                        bd = (string)reader[i];
+                        column = (string)reader[i];
 
-                    padre.Nodes.Add(bd);
-                    //tvDb.Nodes[NodoPocision].Nodes.Add(bd); //+= Environment.NewLine;
-
-                    registrosRecuperados++;
+                    padre.Nodes.Add(column);
                 }
 
                 reader.Close();
-            } catch (Exception ex) {
-                onRead = false;
-
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                txtResultado.Text = ex.Message;
             }
         }
     }

@@ -6,7 +6,7 @@ namespace DataGripChido
 {
     public partial class Form1
     {
-        public void SqlMenu(string sql)
+        public async System.Threading.Tasks.Task SqlMenuAsync(string sql)
         {
             //string sql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA = " + hola;
             // Crea una instancia de MySQLCommand, que es el objeto
@@ -21,48 +21,39 @@ namespace DataGripChido
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
                 // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
-
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
+                MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
 
                 // En un ciclo, mientras existan registros, se podran recuperar
                 // los registros (si es que la consulta devolvio registros).
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     string bd = "";
 
                     for (int i = 0; i < reader.FieldCount; i++)
                         bd = (string)reader[i];
 
-                    tvDb.Nodes.Add(bd); //+= Environment.NewLine;
-
-
-                    registrosRecuperados++;
+                    tvDb.Nodes.Add(bd);
                 }
 
                 reader.Close();
 
                 foreach (TreeNode node in tvDb.Nodes)
-                {
-                    CrearHijosMySQL(node);
-                    Console.WriteLine(node.Text);
-                }
-                onRead = false;
+                    await CrearHijosMySQLAsync(node);
+
+                lblConexion.Text = "Conexión Exitosa";
+                lblConexion.ForeColor = System.Drawing.Color.Green;
+                lblConexion.Visible = true;
             }
             catch (Exception ex)
             {
-                onRead = false;
-
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public void CrearHijosMySQL(TreeNode node)
+        public async System.Threading.Tasks.Task CrearHijosMySQLAsync(TreeNode node)
         {
             try
             {
@@ -75,18 +66,14 @@ namespace DataGripChido
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
                 // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
-
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
+                MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
 
                 // En un ciclo, mientras existan registros, se podran recuperar
                 // los registros (si es que la consulta devolvio registros).
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     string bd = "";
 
@@ -94,28 +81,20 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     node.Nodes.Add(bd);
-                    //tvDb.Nodes[NodoPocision].Nodes.Add(bd); //+= Environment.NewLine;
-
-                    registrosRecuperados++;
                 }
 
                 reader.Close();
 
                 foreach (TreeNode taquito in node.Nodes)
-                {
-                    CrearNietosMySQL(node, taquito);
-                }
-                onRead = false;
+                    await CrearNietosMySQLAsync(node, taquito);
             }
             catch (Exception ex)
             {
-                onRead = false;
-
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public void CrearNietosMySQL(TreeNode abuelo, TreeNode padre)
+        public async System.Threading.Tasks.Task CrearNietosMySQLAsync(TreeNode abuelo, TreeNode padre)
         {
             //string sql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA = " + hola;
             // Crea una instancia de MySQLCommand, que es el objeto
@@ -133,18 +112,14 @@ namespace DataGripChido
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
                 // datos es llamar a Read. Estructura tipo lista.
-                MySqlDataReader reader = command.ExecuteReader();
-                onRead = true;
-
-                // Variable para el control de cuantos registros se recuperaron
-                int registrosRecuperados = 0;
+                MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
 
                 // En un ciclo, mientras existan registros, se podran recuperar
                 // los registros (si es que la consulta devolvio registros).
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     string bd = "";
 
@@ -152,17 +127,12 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     padre.Nodes.Add(bd);
-                    //tvDb.Nodes[NodoPocision].Nodes.Add(bd); //+= Environment.NewLine;
-
-                    registrosRecuperados++;
                 }
 
                 reader.Close();
             }
             catch (Exception ex)
             {
-                onRead = false;
-
                 MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
