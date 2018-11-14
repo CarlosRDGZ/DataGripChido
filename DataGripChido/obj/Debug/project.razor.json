@@ -1,0 +1,14 @@
+{
+  "ProjectFilePath": "c:\\Users\\danie\\Desktop\\blabla\\DataGripChido\\DataGripChido\\DataGripChido.csproj",
+  "TargetFramework": "v4.5.2",
+  "TagHelpers": [],
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  }
+}
