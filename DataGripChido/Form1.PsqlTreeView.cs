@@ -62,7 +62,7 @@ namespace DataGripChido {
                 // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
                 MySqlCommand command = new MySqlCommand("select table_name " +
                                 "from information_schema.tables" +
-                            "where table_schema =  'table_schema and table_catalog = '" + node.Text + "'", mySQLConexion);
+                            "where table_schema = 'public' and table_catalog = '" + node.Text + "'", mySQLConexion);
 
 
                 // Objeto para recuperar datos de la consulta.
@@ -116,8 +116,8 @@ namespace DataGripChido {
                 // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
                 MySqlCommand command = new MySqlCommand("select column_name " +
                 "from information_schema.columns " +
-                "where table_schema =  '" + abuelo.Text + "' " +
-                "and table_catalog = 'd7mdj4u8hovsc2' " +
+                "where table_schema =  'public'" +
+                "and table_catalog = '" + abuelo.Text + "' " +
                 "and table_name = '" + padre.Text + "' ", mySQLConexion);
 
 
