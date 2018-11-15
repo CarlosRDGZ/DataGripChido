@@ -17,11 +17,13 @@ namespace DataGripChido
             {
                 NpgsqlCommand command = new NpgsqlCommand(sql, pgConexion);
                 NpgsqlDataReader reader = (NpgsqlDataReader) await command.ExecuteReaderAsync();
+                int index = 0;
                 while (await reader.ReadAsync()) {
                     string bd = "";
                     for (int i = 0; i < reader.FieldCount; i++)
                         bd = (string)reader[i];
                     tvDb.Nodes.Add(bd);
+                    tvDb.Nodes[index++].Name = "schema";
                 }
 
                 reader.Close();
@@ -45,6 +47,8 @@ namespace DataGripChido
                             "from information_schema.tables " +
                             "where table_schema = '" + schema.Text + "' group by table_catalog", pgConexion);
                 NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
+
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string bd = "";
@@ -53,6 +57,7 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     schema.Nodes.Add(bd);
+                    schema.Nodes[index++].Name = "db";
                 }
 
                 reader.Close();
@@ -75,6 +80,7 @@ namespace DataGripChido
 
                 NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
 
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string table = "";
@@ -83,6 +89,7 @@ namespace DataGripChido
                         table = (string)reader[i];
 
                     bd.Nodes.Add(table);
+                    bd.Nodes[index++].Name = "table";
                 }
 
                 reader.Close();
@@ -106,6 +113,7 @@ namespace DataGripChido
 
                 NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
 
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string column = "";
@@ -114,6 +122,7 @@ namespace DataGripChido
                         column = (string)reader[i];
 
                     padre.Nodes.Add(column);
+                    padre.Nodes[index++].Name = "column";
                 }
 
                 reader.Close();

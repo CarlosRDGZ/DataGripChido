@@ -140,6 +140,7 @@
             // 
             // tvDb
             // 
+            this.tvDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tvDb.Location = new System.Drawing.Point(30, 21);
             this.tvDb.Name = "tvDb";
             this.tvDb.Size = new System.Drawing.Size(268, 391);

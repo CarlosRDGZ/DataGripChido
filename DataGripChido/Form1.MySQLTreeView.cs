@@ -28,6 +28,7 @@ namespace DataGripChido
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string bd = "";
@@ -36,6 +37,7 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     tvDb.Nodes.Add(bd);
+                    tvDb.Nodes[index++].Name = "db";
                 }
 
                 reader.Close();
@@ -73,6 +75,7 @@ namespace DataGripChido
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string bd = "";
@@ -81,6 +84,7 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     node.Nodes.Add(bd);
+                    node.Nodes[index++].Name = "table";
                 }
 
                 reader.Close();
@@ -119,6 +123,7 @@ namespace DataGripChido
                 // Mientras lea un registro se cicla el numero de columnas
                 // del registro y por cada iteracion se agrega a la string de
                 // resultado el registro.
+                int index = 0;
                 while (await reader.ReadAsync())
                 {
                     string bd = "";
@@ -127,6 +132,7 @@ namespace DataGripChido
                         bd = (string)reader[i];
 
                     padre.Nodes.Add(bd);
+                    padre.Nodes[index].Name = "column";
                 }
 
                 reader.Close();

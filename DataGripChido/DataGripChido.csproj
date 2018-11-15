@@ -82,6 +82,12 @@
     <Compile Include="Form1.PsqlTreeView.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Formulario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formulario.Designer.cs">
+      <DependentUpon>Formulario.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -89,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Conexion.resx">
       <DependentUpon>Conexion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formulario.resx">
+      <DependentUpon>Formulario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

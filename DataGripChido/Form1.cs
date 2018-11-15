@@ -30,12 +30,12 @@ namespace DataGripChido
         /// <summary>
         /// Puerto en el que esta escuchando el servicio de la base de datos
         /// </summary>
-        private string puerto = "3306";
+        private string puerto = "5432";
 
         /// <summary>
         /// Determina si es necesario certificado SSL para la conexión
         /// </summary>
-        private bool ssl = false;
+        private bool ssl = true;
 
         /// <summary>
         /// Objecto que maneja la conexión a base de datos MySQL
@@ -64,12 +64,13 @@ namespace DataGripChido
         public Form1()
         {
             InitializeComponent();
+            tvDb.DoubleClick += new EventHandler(TreeView_Click);
         }
 
         /// <summary>
         /// Se engarga de tratar de generar una conexion a bases de datos MySQL
         /// </summary>
-        private void ConetarseMySQL()
+        private bool ConetarseMySQL()
         {
             // Inizializa el formulario de la conexión con los valores actulalez 
             // de las propiedades, para que si quiere editar los valores de la conexion
@@ -114,6 +115,7 @@ namespace DataGripChido
 
                         // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
+                        return true;
                     }
                     catch (MySqlException ex)
                     {
@@ -126,11 +128,13 @@ namespace DataGripChido
 
                         // fallo la conexión asi que isConectado es falso
                         isConectado = false;
+                        return false;
                     }
                 }
                 else
                 {
                     lblConexion.Visible = false;
+                    return false;
                 }
             }
         }
@@ -138,7 +142,7 @@ namespace DataGripChido
         /// <summary>
         /// Se engarga de tratar de generar una conexion a bases de datos PostgreSQL
         /// </summary>
-        private void ConetarsePostgreSQL()
+        private bool ConetarsePostgreSQL()
         {
             // Inizializa el formulario de la conexión con los valores actulalez 
             // de las propiedades, para que si quiere editar los valores de la conexión
@@ -188,6 +192,7 @@ namespace DataGripChido
 
                         // Se abrio la conexión y establece isConectado a verdadero
                         isConectado = true;
+                        return true;
                     }
                     catch (Exception ex)
                     {
@@ -198,11 +203,13 @@ namespace DataGripChido
 
                         // fallo la conexión asi que isConectado es falso
                         isConectado = false;
+                        return false;
                     }
                 }
                 else
                 {
                     lblConexion.Visible = false;
+                    return false;
                 }
             }
         }
@@ -378,18 +385,19 @@ namespace DataGripChido
             // limpia resultados y query
             dataGrid.Rows.Clear();
             dataGrid.Columns.Clear();
+            tvDb.Nodes.Clear();
 
 
 
             if (cmbSGBDR.Text == "MySQL")
             {
-                ConetarseMySQL();
-                SqlMenuAsync("SELECT table_schema FROM INFORMATION_SCHEMA.tables GROUP BY table_schema");
+                if (ConetarseMySQL())
+                    SqlMenuAsync("SELECT table_schema FROM INFORMATION_SCHEMA.tables GROUP BY table_schema");
             }
             else if (cmbSGBDR.Text == "PostgreSQL")
             {
-                ConetarsePostgreSQL();
-                PostSqlMenuAsync("select table_schema from information_schema.tables group by table_schema");
+                if (ConetarsePostgreSQL())
+                    PostSqlMenuAsync("select table_schema from information_schema.tables group by table_schema");
             }   
             else
                 MessageBox.Show("Gestor de base de datos no soportado", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -411,6 +419,24 @@ namespace DataGripChido
             }
             else
                 MessageBox.Show("No hay conexión a ninguna base de datos", "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void TreeView_Click(object sender, EventArgs e)
+        {
+            TreeView node = (TreeView)sender;
+            if (node.SelectedNode != null)
+            {
+                if (node.SelectedNode.Name == "table")
+                {
+                    using (Formulario form = new Formulario(node.SelectedNode))
+                    {
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            string[] fields = form.fields.ToArray();
+                        }
+                    }
+                }
+            }
         }
     }
 }
