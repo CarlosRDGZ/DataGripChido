@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Npgsql;
@@ -59,6 +60,7 @@ namespace DataGripChido
         /// no haga nada si esta es veradero
         /// </summary>
         private bool onRead = false;
+
         #endregion
         
         public Form1()
@@ -217,7 +219,7 @@ namespace DataGripChido
         /// <summary>
         /// Ejecuta sentencia de consulta en base de dato MySQL
         /// </summary>
-        private async System.Threading.Tasks.Task EjecutarMySQLAsync()
+        private async System.Threading.Tasks.Task EjecutarMySQLAsync(string query = null)
         {
             // Crea una instancia de MySQLCommand, que es el objeto
             // que utiliza C# para poder interactuar con la base de datos
@@ -226,7 +228,9 @@ namespace DataGripChido
             {
                 // Objeto utlizado para poder ejecutar un comando de SQL,
                 // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
-                MySqlCommand command = new MySqlCommand(txtQuery.Text, mySQLConexion);
+                if (query == null)
+                    query = txtQuery.Text;
+                MySqlCommand command = new MySqlCommand(query, mySQLConexion);
 
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
@@ -289,16 +293,18 @@ namespace DataGripChido
             }
         }
 
-        private async System.Threading.Tasks.Task EjecutarPostgreSQLAsync()
+        private async System.Threading.Tasks.Task EjecutarPostgreSQLAsync(string query = null)
         {
             // Crea una instancia de MySQLCommand, que es el objeto
             // que utiliza C# para poder interactuar con la base de datos
             // y ejecutar comandos (queries).
             try
             {
+                if (query == null)
+                    query = txtQuery.Text;
                 // Objeto utlizado para poder ejecutar un comando de SQL,
                 // recibe como paramtros (sentencia SQL, objeto de conexión a BD).
-                NpgsqlCommand command = new NpgsqlCommand(txtQuery.Text, pgConexion);
+                NpgsqlCommand command = new NpgsqlCommand(query, pgConexion);
 
                 // Objeto para recuperar datos de la consulta.
                 // No es un array, la unica manera de saber si hay o no
@@ -424,16 +430,21 @@ namespace DataGripChido
         private void TreeView_Click(object sender, EventArgs e)
         {
             TreeView node = (TreeView)sender;
+            Console.WriteLine(node.SelectedNode.Name);
             if (node.SelectedNode != null)
             {
                 if (node.SelectedNode.Name == "table")
                 {
+                    if (mySQLConexion != null)
+                        EjecutarMySQLAsync();
+                    else if (pgConexion != null)
+                        EjecutarPostgreSQLAsync();
+                    else
+                        return;
+
                     using (Formulario form = new Formulario(node.SelectedNode))
                     {
-                        if (form.ShowDialog() == DialogResult.OK)
-                        {
-                            string[] fields = form.fields.ToArray();
-                        }
+                        form.ShowDialog();
                     }
                 }
             }

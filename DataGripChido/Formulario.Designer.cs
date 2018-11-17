@@ -47,7 +47,7 @@
             // btnCancel
             // 
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(505, 11);
+            this.btnCancel.Location = new System.Drawing.Point(290, 12);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(81, 32);
             this.btnCancel.TabIndex = 1;
@@ -58,7 +58,7 @@
             // btnGuardar
             // 
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGuardar.Location = new System.Drawing.Point(405, 11);
+            this.btnGuardar.Location = new System.Drawing.Point(202, 12);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(79, 32);
             this.btnGuardar.TabIndex = 2;
@@ -68,17 +68,17 @@
             // 
             // panel1
             // 
+            this.panel1.AutoScroll = true;
             this.panel1.Location = new System.Drawing.Point(31, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(537, 266);
+            this.panel1.Size = new System.Drawing.Size(340, 303);
             this.panel1.TabIndex = 3;
             // 
             // Formulario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(598, 376);
+            this.ClientSize = new System.Drawing.Size(412, 407);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.btnCancel);

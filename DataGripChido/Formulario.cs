@@ -1,22 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using Npgsql;
 
 namespace DataGripChido
 {
     public partial class Formulario : Form
     {
-        private TreeNode table;
+        private string table;
         private List<TextBox> fields = new List<TextBox>();
         private List<Label> lables = new List<Label>();
+        private MySqlConnection mysql;
+        private NpgsqlConnection psql;
+        private List<Dictionary<string, string>> currents = new List<Dictionary<string, string>>();
+        private int currentNumOfRegisters = 0;
 
         public Formulario(TreeNode table)
         {
             InitializeComponent();
-            this.table = table;
+            this.table = table.Text;
+            CreateFields(table);
+        }
 
-            int y = label1.Location.Y + label1.Size.Height + 10;
-            foreach(TreeNode column in table.Nodes)
+        private void CreateFields (TreeNode table)
+        {
+            int y = 10;
+            foreach (TreeNode column in table.Nodes)
             {
                 var lbl = new Label();
                 lables.Add(lbl);
@@ -34,8 +44,6 @@ namespace DataGripChido
 
                 y += 60;
             }
-
-
             panel1.PerformLayout();
         }
 
@@ -60,5 +68,31 @@ namespace DataGripChido
             return strs;
         }
 
+        private async System.Threading.Tasks.Task GetValuesMySQL()
+        {
+            try
+            {
+                MySqlCommand command = new MySqlCommand("SELECT", mysql);
+                MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var obj = new Dictionary<string, string>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string column = reader.GetName(i);
+                        obj[column] = (string)reader[i];
+                    }
+                    currents.Add(obj);
+                    currentNumOfRegisters++;
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
