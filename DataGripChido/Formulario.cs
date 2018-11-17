@@ -13,14 +13,32 @@ namespace DataGripChido
         private List<Label> lables = new List<Label>();
         private MySqlConnection mysql;
         private NpgsqlConnection psql;
-        private List<Dictionary<string, string>> currents = new List<Dictionary<string, string>>();
-        private int currentNumOfRegisters = 0;
+        private List<Dictionary<string, string>> data = new List<Dictionary<string, string>>();
 
-        public Formulario(TreeNode table)
+        public Formulario(TreeNode table, object conn, string tipo)
         {
             InitializeComponent();
             this.table = table.Text;
             CreateFields(table);
+            Console.WriteLine("Constructor");
+            try
+            {
+                if (tipo == "MySQL")
+                {
+                    mysql = (MySqlConnection)conn;
+                    GetValuesMySQL();
+                }
+                else if (tipo == "PSQL")
+                {
+                    psql = (NpgsqlConnection)conn;
+                    GetValuesPsql();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error de consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
         private void CreateFields (TreeNode table)
@@ -39,6 +57,8 @@ namespace DataGripChido
                 fields.Add(txt);
                 txt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 txt.Location = new System.Drawing.Point(20, y + 20);
+                txt.Width = panel1.Width - txt.Location.X - 10;
+                txt.Name = column.Text;
                 panel1.Controls.Add(lbl);
                 panel1.Controls.Add(txt);
 
@@ -72,7 +92,7 @@ namespace DataGripChido
         {
             try
             {
-                MySqlCommand command = new MySqlCommand("SELECT", mysql);
+                MySqlCommand command = new MySqlCommand($"SELECT * FROM {this.table}", mysql);
                 MySqlDataReader reader = (MySqlDataReader)await command.ExecuteReaderAsync();
 
                 while (await reader.ReadAsync())
@@ -83,8 +103,42 @@ namespace DataGripChido
                         string column = reader.GetName(i);
                         obj[column] = (string)reader[i];
                     }
-                    currents.Add(obj);
-                    currentNumOfRegisters++;
+
+                    if (data.Count == 0)
+                    {
+                        foreach (var txt in fields)
+                        {
+                            Console.WriteLine(txt.Name);
+                            Console.WriteLine(data.Count);
+                        }
+                    }
+                    data.Add(obj);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private async System.Threading.Tasks.Task GetValuesPsql()
+        {
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM {this.table}", psql);
+                NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var obj = new Dictionary<string, string>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string column = reader.GetName(i);
+                        obj[column] = (string)reader[i];
+                    }
+                    data.Add(obj);
                 }
 
                 reader.Close();

@@ -430,22 +430,28 @@ namespace DataGripChido
         private void TreeView_Click(object sender, EventArgs e)
         {
             TreeView node = (TreeView)sender;
-            Console.WriteLine(node.SelectedNode.Name);
+            
             if (node.SelectedNode != null)
             {
                 if (node.SelectedNode.Name == "table")
                 {
+
                     if (mySQLConexion != null)
-                        EjecutarMySQLAsync();
+                    {
+                        using (Formulario form = new Formulario(node.SelectedNode, mySQLConexion, "MySQL"))
+                        {
+                            form.ShowDialog();
+                        }
+                    }
                     else if (pgConexion != null)
-                        EjecutarPostgreSQLAsync();
+                    {
+                        using (Formulario form = new Formulario(node.SelectedNode,pgConexion, "PSQL"))
+                        {
+                            form.ShowDialog();
+                        }
+                    }
                     else
                         return;
-
-                    using (Formulario form = new Formulario(node.SelectedNode))
-                    {
-                        form.ShowDialog();
-                    }
                 }
             }
         }
